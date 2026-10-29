@@ -1,59 +1,73 @@
-# MyInvoiceGenerator
+# My Invoice Generator
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
+A modern, responsive invoice generator built with **Angular, TypeScript, and SCSS**, designed to simplify the creation of Spanish invoices through automatic tax calculations, live previews, and PDF export.
 
-## Development server
+The project aims to replace traditional spreadsheet-based invoicing with a more intuitive and efficient web application.
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+### Invoice Creation
+- Add issuer and client information.
+- Enter invoice numbers, issue dates, and payment details.
+- Add, edit, and remove invoice items dynamically.
+- Specify descriptions, quantities, unit prices, and discounts.
+- Preview the invoice in real time.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Spanish Tax Calculations
+- Automatic calculation of taxable amounts.
+- Support for applicable Spanish VAT (IVA) rates.
+- Configurable personal income tax (IRPF) withholding.
+- Automatic calculation of subtotals, taxes, and final amounts.
+- Validation of invoice fields and calculations.
 
-## Code scaffolding
+Tax rates and treatments depend on the transaction and taxpayer. The application will not assume that the same tax configuration applies to every invoice.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Export and Data Management
+- Generate professional, print-ready A4 PDF invoices.
+- Export invoice data as JSON.
+- Import previously exported JSON files to continue editing.
+- Use the application without registration or a backend.
 
-```bash
-ng generate component component-name
-```
+### User Interface
+- Responsive design for desktop, tablet, and mobile.
+- Dynamic forms with real-time validation.
+- Live invoice preview.
+- Clean and accessible interface.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Tech Stack
 
-```bash
-ng generate --help
-```
+| Technology | Purpose |
+|---|---|
+| Angular | Frontend framework |
+| TypeScript | Application logic and type safety |
+| SCSS | Styling and responsive layouts |
+| Angular Reactive Forms | Dynamic forms and validation |
+| Angular Signals | Reactive state and calculations |
+| pdfmake | PDF document generation |
+| GitHub Pages | Static application hosting |
 
-## Building
+## Project Goals
 
-To build the project run:
+This project is designed to demonstrate practical frontend development skills, including:
 
-```bash
-ng build
-```
+- Building reusable Angular components.
+- Managing complex forms with Reactive Forms and FormArray.
+- Implementing business logic and financial calculations.
+- Using Signals for reactive state management.
+- Creating and exporting PDF documents.
+- Handling JSON file import and export.
+- Implementing responsive and accessible interfaces.
+- Writing unit tests for tax calculations, rounding, and form validation.
+- Deploying an Angular application using GitHub Pages.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Legal Disclaimer
 
-## Running unit tests
+This application is intended as a frontend development project and invoice drafting tool.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Although it aims to support Spanish invoicing fields and tax calculations, it has not been certified or verified as compliant with all applicable Spanish invoicing regulations, including SIF/VERI*FACTU requirements.
 
-```bash
-ng test
-```
+It should not be relied upon as legally compliant invoicing software without further assessment.
 
-## Running end-to-end tests
+## License
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is licensed under the MIT License.
