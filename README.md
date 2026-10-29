@@ -60,20 +60,6 @@ This project is designed to demonstrate practical frontend development skills, i
 - Writing unit tests for tax calculations, rounding, and form validation.
 - Deploying an Angular application using GitHub Pages.
 
-## Planned Development
-
-- [ ] Initialise the Angular project.
-- [ ] Create the application layout and navigation.
-- [ ] Implement issuer and client forms.
-- [ ] Add dynamic invoice items.
-- [ ] Implement tax calculations and validation.
-- [ ] Build the live invoice preview.
-- [ ] Implement PDF export.
-- [ ] Add JSON import and export.
-- [ ] Implement unit tests.
-- [ ] Improve responsive design and accessibility.
-- [ ] Deploy to GitHub Pages.
-
 ## Legal Disclaimer
 
 This application is intended as a frontend development project and invoice drafting tool.
