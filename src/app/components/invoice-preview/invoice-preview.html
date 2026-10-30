@@ -1,0 +1,8 @@
+
+<h2>Vista previa</h2>
+
+<p><strong>Factura:</strong> {{ invoice().number }}</p>
+<p><strong>Cliente:</strong> {{ invoice().client.name }}</p>
+<p><strong>Vencimiento:</strong> {{ dueDate() }}</p>
+<p><strong>Total:</strong> {{ totals().total }} €</p>
+<p>{{ taxNote() }}</p>

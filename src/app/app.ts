@@ -1,12 +1,41 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+
+import { Component, computed, signal } from '@angular/core';
+
+import { DEFAULT_INVOICE } from './data/default-data';
+import { InvoiceCalculator } from './services/invoice-calculator';
+import type { Invoice } from './models/invoice';
+
+import { InvoiceForm } from './components/invoice-form/invoice-form';
+import { InvoicePreview } from './components/invoice-preview/invoice-preview';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
+  standalone: true,
+  imports: [InvoiceForm, InvoicePreview],
   templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('my-invoice-generator');
+  invoice = signal<Invoice>(structuredClone(DEFAULT_INVOICE));
+
+  constructor(private calculator: InvoiceCalculator) {}
+
+  totals = computed(() =>
+    this.calculator.calculate(this.invoice())
+  );
+
+  dueDate = computed(() =>
+    this.calculator.calculateDueDate(
+      this.invoice().issueDate,
+      this.invoice().dueDays
+    )
+  );
+
+  taxNote = computed(() =>
+    this.calculator.getTaxNote(this.invoice())
+  );
+
+  updateInvoice(updatedInvoice: Invoice): void {
+    this.invoice.set(updatedInvoice);
+  }
 }

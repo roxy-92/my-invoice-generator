@@ -1,0 +1,75 @@
+
+.invoice {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+
+  &__header {
+    margin-bottom: 32px;
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #777;
+    }
+  }
+
+  &__content {
+    padding: 32px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+  }
+
+  &__details {
+    margin: 24px 0;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  &__totals {
+    max-width: 350px;
+    margin: 32px 0 32px auto;
+
+    p {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+  }
+
+  &__total {
+    padding-top: 16px;
+    border-top: 2px solid #333;
+    font-size: 1.25rem;
+  }
+
+  &__tax-note {
+    margin-top: 32px;
+    color: #666;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .invoice {
+    margin: 0;
+    padding: 12px;
+
+    &__content {
+      padding: 20px;
+    }
+
+    &__item {
+      flex-direction: column;
+    }
+  }
+}
