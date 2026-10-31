@@ -1,8 +1,281 @@
 
-<h2>Editar factura</h2>
+<section class="invoice-form">
+  <h2>Datos de la factura</h2>
 
-<p>Cliente actual: {{ invoice().client.name }}</p>
+  <form [formGroup]="form">
 
-<button type="button" (click)="changeInvoiceNumber()">
-  Cambiar número de factura
-</button>
+    <!-- DATOS DEL EMISOR -->
+    <fieldset class="issuer-fields" formGroupName="issuer">
+      <legend>Datos del emisor</legend>
+
+      <div class="logo-upload">
+        <label for="issuer-logo">Logotipo</label>
+
+        <div class="logo-upload__preview">
+          @if (invoice().issuer.logo) {
+            <img
+              [src]="invoice().issuer.logo"
+              alt="Logotipo del emisor"
+            />
+          } @else {
+            <span>Sin logotipo</span>
+          }
+        </div>
+
+        <input
+          id="issuer-logo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          (change)="onLogoSelected($event)"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-name">Nombre o razón social</label>
+        <input
+          id="issuer-name"
+          type="text"
+          formControlName="name"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-tax-id">NIF / CIF</label>
+        <input
+          id="issuer-tax-id"
+          type="text"
+          formControlName="taxId"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-email">Correo electrónico</label>
+        <input
+          id="issuer-email"
+          type="email"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-address">Dirección</label>
+        <input
+          id="issuer-address"
+          type="text"
+          formControlName="address"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-postal-code">Código postal</label>
+        <input
+          id="issuer-postal-code"
+          type="text"
+          formControlName="postalCode"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-city">Localidad</label>
+        <input
+          id="issuer-city"
+          type="text"
+          formControlName="city"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-province">Provincia</label>
+        <input
+          id="issuer-province"
+          type="text"
+          formControlName="province"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="issuer-country">País</label>
+        <input
+          id="issuer-country"
+          type="text"
+          formControlName="country"
+        />
+      </div>
+    </fieldset>
+
+    <!-- DATOS GENERALES DE LA FACTURA -->
+    <div class="form-field">
+      <label for="invoice-number">Número de factura</label>
+      <input
+        id="invoice-number"
+        type="text"
+        formControlName="number"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="issue-date">Fecha de emisión</label>
+      <input
+        id="issue-date"
+        type="date"
+        formControlName="issueDate"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="due-days">Plazo de vencimiento</label>
+      <select id="due-days" formControlName="dueDays">
+        <option [ngValue]="0">El mismo día</option>
+        <option [ngValue]="7">7 días</option>
+        <option [ngValue]="15">15 días</option>
+        <option [ngValue]="30">30 días</option>
+        <option [ngValue]="60">60 días</option>
+        <option [ngValue]="90">90 días</option>
+      </select>
+    </div>
+
+    <!-- SELECCIÓN DEL CLIENTE -->
+    <div class="form-field">
+      <label for="client">Cliente</label>
+      <select id="client" formControlName="clientId">
+        @for (client of clients; track client.id) {
+          <option [value]="client.id">
+            {{ client.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- DATOS EDITABLES DEL CLIENTE -->
+    <fieldset class="client-fields" formGroupName="client">
+      <legend>Datos del cliente</legend>
+
+      <div class="form-field">
+        <label for="client-name">Nombre o razón social</label>
+        <input
+          id="client-name"
+          type="text"
+          formControlName="name"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="client-tax-id">NIF / CIF / VAT</label>
+        <input
+          id="client-tax-id"
+          type="text"
+          formControlName="taxId"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="client-address">Dirección</label>
+        <input
+          id="client-address"
+          type="text"
+          formControlName="address"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="client-country">País</label>
+        <input
+          id="client-country"
+          type="text"
+          formControlName="country"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="client-tax-category">Ámbito fiscal</label>
+        <select
+          id="client-tax-category"
+          formControlName="taxCategory"
+        >
+          @for (category of taxCategories; track category.value) {
+            <option [value]="category.value">
+              {{ category.label }}
+            </option>
+          }
+        </select>
+      </div>
+    </fieldset>
+
+    <!-- FORMA DE PAGO -->
+    <div class="form-field">
+      <label for="payment-method">Forma de pago</label>
+      <select
+        id="payment-method"
+        formControlName="paymentMethod"
+      >
+        @for (method of paymentMethods; track method.value) {
+          <option [value]="method.value">
+            {{ method.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- CONCEPTOS DE LA FACTURA -->
+    <fieldset class="items-fields">
+      <legend>Conceptos de la factura</legend>
+
+      <div formArrayName="items">
+        @for (item of items.controls; track item; let i = $index) {
+          <div
+            [formGroupName]="i"
+            class="invoice-item-fields"
+          >
+
+            <div class="form-field">
+              <label [for]="'item-description-' + i">
+                Descripción
+              </label>
+              <input
+                [id]="'item-description-' + i"
+                type="text"
+                formControlName="description"
+              />
+            </div>
+
+            <div class="form-field">
+              <label [for]="'item-quantity-' + i">
+                Cantidad
+              </label>
+              <input
+                [id]="'item-quantity-' + i"
+                type="number"
+                min="1"
+                formControlName="quantity"
+              />
+            </div>
+
+            <div class="form-field">
+              <label [for]="'item-price-' + i">
+                Precio unitario (€)
+              </label>
+              <input
+                [id]="'item-price-' + i"
+                type="number"
+                min="0"
+                step="0.01"
+                formControlName="unitPrice"
+              />
+            </div>
+
+          </div>
+        }
+      </div>
+      
+    <button
+      type="button"
+      class="add-item-button"
+      (click)="addItem()"
+    >
+      + Añadir concepto
+    </button>
+
+    </fieldset>
+
+  </form>
+</section>

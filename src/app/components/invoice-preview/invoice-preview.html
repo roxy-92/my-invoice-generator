@@ -1,8 +1,213 @@
 
-<h2>Vista previa</h2>
+<section class="invoice-preview">
+  <h2>Vista previa</h2>
 
-<p><strong>Factura:</strong> {{ invoice().number }}</p>
-<p><strong>Cliente:</strong> {{ invoice().client.name }}</p>
-<p><strong>Vencimiento:</strong> {{ dueDate() }}</p>
-<p><strong>Total:</strong> {{ totals().total }} €</p>
-<p>{{ taxNote() }}</p>
+  <div class="invoice-paper">
+
+    <!-- CABECERA -->
+    <header class="invoice-header">
+
+      <!-- FILA SUPERIOR: LOGOTIPO Y FACTURA -->
+      <div class="invoice-header__top">
+
+        <div class="invoice-logo">
+          @if (invoice().issuer.logo) {
+            <img
+              [src]="invoice().issuer.logo"
+              [alt]="'Logotipo de ' + invoice().issuer.name"
+            />
+          }
+        </div>
+
+        <div class="invoice-details">
+          <h3>Factura</h3>
+
+          <p>
+            <strong>Número:</strong>
+            {{ invoice().number }}
+          </p>
+
+          <p>
+            <strong>Fecha de emisión:</strong>
+            {{ invoice().issueDate }}
+          </p>
+
+          <p>
+            <strong>Fecha de vencimiento:</strong>
+            {{ dueDate() }}
+          </p>
+        </div>
+
+      </div>
+
+      <!-- SEGUNDA FILA: EMISOR Y CLIENTE -->
+      <div class="invoice-header__parties">
+
+        <!-- EMISOR -->
+        <div class="issuer-preview">
+          <h3>Datos del emisor</h3>
+
+          <p><strong>{{ invoice().issuer.name }}</strong></p>
+          <p>NIF / CIF: {{ invoice().issuer.taxId }}</p>
+          <p>{{ invoice().issuer.email }}</p>
+          <p>{{ invoice().issuer.address }}</p>
+
+          <p>
+            {{ invoice().issuer.postalCode }}
+            {{ invoice().issuer.city }}
+          </p>
+
+          <p>{{ invoice().issuer.province }}</p>
+          <p>{{ invoice().issuer.country }}</p>
+        </div>
+
+        <!-- CLIENTE -->
+        <div class="client-preview">
+          <h3>Datos del cliente</h3>
+
+          <p>
+            <strong>{{ invoice().client.name }}</strong>
+          </p>
+
+          @if (invoice().client.taxId) {
+            <p>
+              NIF / VAT: {{ invoice().client.taxId }}
+            </p>
+          }
+
+          @if (invoice().client.address) {
+            <p>{{ invoice().client.address }}</p>
+          }
+
+          <p>{{ invoice().client.country }}</p>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- CONCEPTOS -->
+    <div class="invoice-items">
+      <h3>Conceptos de la factura</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of invoice().items; track item.id) {
+            <tr>
+              <td>{{ item.description }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unitPrice.toFixed(2) }} €</td>
+              <td>
+                {{ (item.quantity * item.unitPrice).toFixed(2) }} €
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOTALES -->
+    <div class="invoice-totals">
+      <p>
+        <strong>Base imponible:</strong>
+        <span>{{ totals().subtotal.toFixed(2) }} €</span>
+      </p>
+
+      <p>
+        <strong>IVA:</strong>
+        <span>{{ totals().iva.toFixed(2) }} €</span>
+      </p>
+
+      <p>
+        <strong>IRPF:</strong>
+        <span>{{ totals().irpf.toFixed(2) }} €</span>
+      </p>
+
+      <p class="invoice-total">
+        <strong>Total:</strong>
+        <span>{{ totals().total.toFixed(2) }} €</span>
+      </p>
+    </div>
+
+    <!-- NOTA FISCAL -->
+    @if (taxNote()) {
+      <div class="invoice-tax-note">
+        <p>{{ taxNote() }}</p>
+      </div>
+    }
+
+    <!-- INFORMACIÓN DE PAGO -->
+    <div class="invoice-payment">
+      <h3>Información de pago</h3>
+
+      <div class="invoice-payment__details">
+        <div>
+          <strong>Fecha de vencimiento</strong>
+          <span>{{ dueDate() }}</span>
+        </div>
+
+        <div>
+          <strong>Importe a pagar</strong>
+          <span>{{ totals().total.toFixed(2) }} €</span>
+        </div>
+
+        <div>
+          <strong>Forma de pago</strong>
+          <span>
+            @switch (invoice().paymentMethod) {
+              @case ('bank-transfer') {
+                Transferencia bancaria
+              }
+              @case ('paypal') {
+                PayPal
+              }
+              @case ('stripe') {
+                Stripe
+              }
+              @case ('bizum') {
+                Bizum
+              }
+            }
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIE LEGAL -->
+    <footer class="invoice-footer">
+      <p>
+        <strong>Responsable de los datos:</strong>
+        {{ invoice().issuer.name }} /
+        {{ invoice().issuer.taxId }} /
+        {{ invoice().issuer.email }}
+        |
+        <strong>Finalidad principal:</strong>
+        Gestionar la relación comercial/profesional que nos une.
+        |
+        <strong>Legitimación:</strong>
+        Ejecución del contrato.
+        |
+        <strong>Derechos:</strong>
+        Acceso, rectificación, supresión y portabilidad de sus datos,
+        de limitación y oposición a su tratamiento, así como a no ser
+        objeto de decisiones basadas únicamente en el tratamiento
+        automatizado de sus datos, cuando procedan.
+        |
+        <strong>Información adicional:</strong>
+        Puede consultar la información adicional y detallada sobre
+        nuestra Política de Privacidad escribiendo al correo electrónico
+        {{ invoice().issuer.email }}.
+      </p>
+    </footer>
+
+  </div>
+</section>
