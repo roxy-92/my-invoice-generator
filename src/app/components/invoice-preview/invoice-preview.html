@@ -4,6 +4,24 @@
 
   <div class="invoice-paper">
 
+    <!-- ADVERTENCIA DE DEMOSTRACIÓN -->
+    <div class="invoice-demo-warning" role="note">
+      <span class="invoice-demo-warning__icon" aria-hidden="true">
+        ⚠
+      </span>
+
+      <div class="invoice-demo-warning__content">
+        <strong>
+          DOCUMENTO DE DEMOSTRACIÓN · NO VÁLIDO PARA USO COMERCIAL
+        </strong>
+        <p>
+          Factura generada con una aplicación experimental.
+          Los datos, cálculos y tratamientos fiscales pueden contener errores.
+          Este documento no debe utilizarse para operaciones comerciales reales.
+        </p>
+      </div>
+    </div>
+
     <!-- CABECERA -->
     <header class="invoice-header">
 
@@ -29,12 +47,12 @@
 
           <p>
             <strong>Fecha de emisión:</strong>
-            {{ invoice().issueDate }}
+            {{ invoice().issueDate | date:'dd/MM/yyyy':'UTC' }}
           </p>
 
           <p>
             <strong>Fecha de vencimiento:</strong>
-            {{ dueDate() }}
+            {{ dueDate() | date:'dd/MM/yyyy':'UTC' }}
           </p>
         </div>
 
@@ -105,9 +123,11 @@
             <tr>
               <td>{{ item.description }}</td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.unitPrice.toFixed(2) }} €</td>
               <td>
-                {{ (item.quantity * item.unitPrice).toFixed(2) }} €
+                {{ item.unitPrice | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+              </td>
+              <td>
+                {{ (item.quantity * item.unitPrice) | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
               </td>
             </tr>
           }
@@ -119,22 +139,30 @@
     <div class="invoice-totals">
       <p>
         <strong>Base imponible:</strong>
-        <span>{{ totals().subtotal.toFixed(2) }} €</span>
+        <span>
+          {{ totals().subtotal | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+        </span>
       </p>
 
       <p>
-        <strong>IVA:</strong>
-        <span>{{ totals().iva.toFixed(2) }} €</span>
+        <strong>IVA ({{ ivaRate }} %):</strong>
+        <span>
+          {{ totals().iva | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+        </span>
       </p>
 
       <p>
-        <strong>IRPF:</strong>
-        <span>{{ totals().irpf.toFixed(2) }} €</span>
+        <strong>IRPF ({{ irpfRate }} %):</strong>
+        <span>
+          {{ totals().irpf | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+        </span>
       </p>
 
       <p class="invoice-total">
         <strong>Total:</strong>
-        <span>{{ totals().total.toFixed(2) }} €</span>
+        <span>
+          {{ totals().total | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+        </span>
       </p>
     </div>
 
@@ -150,14 +178,19 @@
       <h3>Información de pago</h3>
 
       <div class="invoice-payment__details">
+
         <div>
           <strong>Fecha de vencimiento</strong>
-          <span>{{ dueDate() }}</span>
+          <span>
+            {{ dueDate() | date:'dd/MM/yyyy':'UTC' }}
+          </span>
         </div>
 
         <div>
           <strong>Importe a pagar</strong>
-          <span>{{ totals().total.toFixed(2) }} €</span>
+          <span>
+            {{ totals().total | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+          </span>
         </div>
 
         <div>
@@ -179,6 +212,7 @@
             }
           </span>
         </div>
+
       </div>
     </div>
 

@@ -48,27 +48,74 @@
   }
 }
 
+// ADVERTENCIA DE DEMOSTRACIÓN
+.invoice-demo-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  margin-bottom: 24px;
+  padding: 14px 16px;
+
+  background: #fff3cd;
+  border: 1px solid #e6a700;
+  border-left: 4px solid #dc2626;
+  border-radius: 6px;
+
+  color: #78350f;
+
+  break-inside: avoid;
+  page-break-inside: avoid;
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: 24px;
+    line-height: 1;
+    color: #dc2626;
+  }
+
+  &__content {
+    min-width: 0;
+
+    strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #991b1b;
+    }
+
+    p {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #78350f;
+    }
+  }
+}
+
 // CABECERA
 .invoice-header {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-// LOGOTIPO Y FACTURA
+// LOGOTIPO Y DATOS DE FACTURA
 .invoice-header__top {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 32px;
+  gap: 24px;
   align-items: start;
 }
 
 .invoice-logo {
   img {
     display: block;
-    max-width: 150px;
-    max-height: 90px;
+    max-width: 140px;
+    max-height: 80px;
     object-fit: contain;
   }
 }
@@ -77,8 +124,8 @@
   text-align: right;
 
   h3 {
-    margin-bottom: 14px;
-    font-size: 24px;
+    margin-bottom: 10px;
+    font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -86,7 +133,9 @@
   }
 
   p {
-    margin-bottom: 7px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    line-height: 1.4;
   }
 }
 
@@ -94,36 +143,40 @@
 .invoice-header__parties {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 32px;
+  gap: 24px;
   align-items: stretch;
 }
 
 .issuer-preview,
 .client-preview {
   min-width: 0;
-  padding: 16px;
+  padding: 14px;
+
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
+
+  font-size: 12px;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 
   h3 {
-    margin-bottom: 10px;
-    font-size: 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
   }
 
   p {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
   }
 }
 
 // CONCEPTOS
 .invoice-items {
   width: 100%;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 
   h3 {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   table {
@@ -134,7 +187,7 @@
 
   th,
   td {
-    padding: 12px 10px;
+    padding: 10px 8px;
     text-align: left;
     vertical-align: top;
     overflow-wrap: anywhere;
@@ -181,14 +234,14 @@
   width: 260px;
   max-width: 100%;
   margin-left: auto;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 
   p {
     display: flex;
     justify-content: space-between;
     gap: 16px;
     margin: 0;
-    padding: 8px 0;
+    padding: 7px 0;
     border-bottom: 1px solid #e2e8f0;
   }
 
@@ -199,7 +252,7 @@
 
   .invoice-total {
     margin-top: 8px;
-    padding: 14px 12px;
+    padding: 12px;
     background: #f1f5f9;
     border: none;
     border-radius: 4px;
@@ -215,8 +268,9 @@
 
 // NOTA FISCAL
 .invoice-tax-note {
-  margin: 12px 0 28px;
-  padding: 14px 18px;
+  margin: 10px 0 20px;
+  padding: 12px 16px;
+
   background: #f1f5f9;
   border-left: 3px solid #94a3b8;
   border-radius: 4px;
@@ -224,17 +278,17 @@
   p {
     margin: 0;
     font-size: 12px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #475569;
   }
 }
 
 // INFORMACIÓN DE PAGO
 .invoice-payment {
-  margin: 0 0 32px;
+  margin: 0 0 20px;
 
   h3 {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     font-size: 14px;
   }
 }
@@ -242,6 +296,7 @@
 .invoice-payment__details {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   overflow: hidden;
@@ -249,9 +304,10 @@
   > div {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+
     min-width: 0;
-    padding: 14px 12px;
+    padding: 12px 10px;
     text-align: center;
 
     &:not(:last-child) {
@@ -266,7 +322,7 @@
   }
 
   span {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: #1e293b;
     overflow-wrap: anywhere;
@@ -276,13 +332,13 @@
 // PIE LEGAL
 .invoice-footer {
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid #e2e8f0;
 
   p {
     margin: 0;
     font-size: 10px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #64748b;
     text-align: left;
   }
@@ -293,7 +349,7 @@
 }
 
 // PANTALLAS PEQUEÑAS
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   .invoice-paper {
     padding: 24px;
     min-height: auto;
@@ -315,6 +371,185 @@
     > div:not(:last-child) {
       border-right: none;
       border-bottom: 1px solid #e2e8f0;
+    }
+  }
+}
+
+// IMPRESIÓN Y EXPORTACIÓN A PDF
+@media print {
+  :host {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .invoice-preview {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    > h2 {
+      display: none;
+    }
+  }
+
+  .invoice-paper {
+    display: block;
+    overflow: visible;
+
+    width: 210mm;
+    max-width: none;
+    min-height: 0;
+    height: auto;
+
+    margin: 0;
+    padding: 8mm 12.7mm;
+
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ffffff;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  // AVISO EN PDF
+  .invoice-demo-warning {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+
+    background: #fff3cd !important;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  // CABECERA COMPACTA
+  .invoice-header {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .invoice-header__top,
+  .invoice-header__parties {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .invoice-details {
+    text-align: right;
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
+
+    p {
+      margin-bottom: 3px;
+      font-size: 11px;
+    }
+  }
+
+  .issuer-preview,
+  .client-preview {
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.35;
+
+    h3 {
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    p {
+      margin-bottom: 2px;
+    }
+  }
+
+  // CONCEPTOS
+  .invoice-items {
+    margin-bottom: 10px;
+
+    h3 {
+      margin-bottom: 8px;
+    }
+
+    th,
+    td {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  }
+
+  // TOTALES
+  .invoice-totals {
+    margin-bottom: 10px;
+
+    p {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+
+  // NOTA FISCAL
+  .invoice-tax-note {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    padding: 10px 14px;
+  }
+
+  // INFORMACIÓN DE PAGO
+  .invoice-payment {
+    margin-bottom: 8px;
+
+    h3 {
+      margin-bottom: 8px;
+    }
+  }
+
+  .invoice-payment__details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    > div {
+      gap: 6px;
+      padding: 10px 8px;
+
+      &:not(:last-child) {
+        border-right: 1px solid #e2e8f0;
+        border-bottom: none;
+      }
+    }
+  }
+
+  // PIE LEGAL
+  .invoice-footer {
+    margin-top: 0;
+    padding-top: 8px;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  // EVITAR CORTES DE CONTENIDO
+  .invoice-demo-warning,
+  .invoice-header,
+  .invoice-totals,
+  .invoice-tax-note,
+  .invoice-payment {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .invoice-items {
+    tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    thead {
+      display: table-header-group;
     }
   }
 }

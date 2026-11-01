@@ -6,6 +6,25 @@
     <p>Crea, personaliza y descarga tus facturas fácilmente.</p>
   </header>
 
+  <!-- ADVERTENCIA DE DEMOSTRACIÓN -->
+  <aside class="invoice-generator__notice" role="note">
+    <span class="invoice-generator__notice-icon" aria-hidden="true">
+      ⚠
+    </span>
+
+    <div class="invoice-generator__notice-content">
+      <strong>
+        DOCUMENTO DE DEMOSTRACIÓN · NO VÁLIDO PARA USO COMERCIAL
+      </strong>
+
+      <p>
+        Factura generada con una aplicación experimental.
+        Los datos, cálculos y tratamientos fiscales pueden contener errores.
+        Este documento no debe utilizarse para operaciones comerciales reales.
+      </p>
+    </div>
+  </aside>
+
   <div class="invoice-generator__layout">
 
     <section class="invoice-generator__editor">
@@ -16,12 +35,24 @@
     </section>
 
     <section class="invoice-generator__preview">
+
+      <div class="invoice-generator__actions">
+        <button
+          type="button"
+          class="invoice-generator__download"
+          (click)="exportPdf()"
+        >
+          Exportar PDF de demostración
+        </button>
+      </div>
+
       <app-invoice-preview
         [invoice]="invoice()"
         [totals]="totals()"
         [dueDate]="dueDate()"
         [taxNote]="taxNote()"
       />
+
     </section>
 
   </div>

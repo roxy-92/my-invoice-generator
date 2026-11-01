@@ -1,6 +1,11 @@
 
 import { Component, input, output, OnInit, inject } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 
 import type {
   Invoice,
@@ -8,7 +13,7 @@ import type {
   TaxCategory
 } from '../../models/invoice';
 
-import { DEFAULT_CLIENTS } from '../../data/default-data';
+import { spanishTaxIdValidator } from '../../validators/spanish-tax-id.validator';
 
 @Component({
   selector: 'app-invoice-form',
@@ -22,8 +27,6 @@ export class InvoiceForm implements OnInit {
   invoiceChange = output<Invoice>();
 
   private readonly fb = inject(FormBuilder);
-
-  readonly clients = DEFAULT_CLIENTS;
 
   readonly paymentMethods: { value: PaymentMethod; label: string }[] = [
     { value: 'bank-transfer', label: 'Transferencia bancaria' },
@@ -40,17 +43,16 @@ export class InvoiceForm implements OnInit {
   ];
 
   form = this.fb.nonNullable.group({
-    number: [''],
-    issueDate: [''],
-    dueDays: [30],
-    clientId: ['patreon'],
+    number: ['', [Validators.required]],
+    issueDate: ['', [Validators.required]],
+    dueDays: [30, [Validators.required, Validators.min(0)]],
 
     items: this.fb.array([
       this.fb.nonNullable.group({
         id: ['item-1'],
-        description: [''],
-        quantity: [1],
-        unitPrice: [0]
+        description: ['', [Validators.required]],
+        quantity: [1, [Validators.required, Validators.min(1)]],
+        unitPrice: [0, [Validators.required, Validators.min(0)]]
       })
     ]),
 
@@ -59,20 +61,51 @@ export class InvoiceForm implements OnInit {
       taxId: [''],
       address: [''],
       country: [''],
-      taxCategory: this.fb.nonNullable.control<TaxCategory>('foreign-company')
+      taxCategory: this.fb.nonNullable.control<TaxCategory>(
+        'foreign-company'
+      )
     }),
 
     paymentMethod: ['bank-transfer' as PaymentMethod],
 
     issuer: this.fb.nonNullable.group({
-      name: [''],
-      taxId: [''],
-      email: [''],
-      address: [''],
-      postalCode: [''],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/.*\S.*/)
+        ]
+      ],
+      taxId: [
+        '',
+        [
+          Validators.required,
+          spanishTaxIdValidator
+        ]
+      ],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(
+            /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)*\.[a-zA-Z]{2,}$/
+          )
+        ]
+      ],
+      address: ['', [Validators.required]],
+      postalCode: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            /^(0[1-9]|[1-4][0-9]|5[0-2])[0-9]{3}$/
+          )
+        ]
+      ],
       city: [''],
       province: [''],
-      country: ['']
+      country: ['', [Validators.required]]
     })
   });
 
@@ -80,6 +113,64 @@ export class InvoiceForm implements OnInit {
     return this.form.controls.items;
   }
 
+  get clientControls() {
+    return this.form.controls.client.controls;
+  }
+
+  get isPrivateClient(): boolean {
+    return this.clientControls.taxCategory.value === 'private';
+  }
+
+  get isSpanishCompany(): boolean {
+    const category = this.clientControls.taxCategory.value;
+
+    return category === 'spanish-exempt' ||
+      category === 'spanish-standard';
+  }
+
+  // VALIDACIONES DINÁMICAS DEL CLIENTE
+  private updateClientValidators(category: TaxCategory): void {
+    const { name, taxId, address, country } = this.clientControls;
+
+    if (category === 'private') {
+      name.clearValidators();
+      taxId.clearValidators();
+      address.clearValidators();
+      country.clearValidators();
+    } else {
+      const requiredText = [
+        Validators.required,
+        Validators.pattern(/.*\S.*/)
+      ];
+
+      name.setValidators(requiredText);
+      address.setValidators(requiredText);
+      country.setValidators(requiredText);
+
+      if (
+        category === 'spanish-exempt' ||
+        category === 'spanish-standard'
+      ) {
+        taxId.setValidators([
+          Validators.required,
+          spanishTaxIdValidator
+        ]);
+      } else {
+        taxId.setValidators(requiredText);
+      }
+    }
+
+    name.updateValueAndValidity({ emitEvent: false });
+    taxId.updateValueAndValidity({ emitEvent: false });
+    address.updateValueAndValidity({ emitEvent: false });
+    country.updateValueAndValidity({ emitEvent: false });
+
+    this.form.controls.client.updateValueAndValidity({
+      emitEvent: false
+    });
+  }
+
+  // CARGAR LOGOTIPO
   onLogoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -126,28 +217,36 @@ export class InvoiceForm implements OnInit {
   ngOnInit(): void {
     const invoice = this.invoice();
 
-    // Cargar los conceptos de la factura
+    // CARGAR LOS CONCEPTOS
     this.form.setControl(
       'items',
       this.fb.array(
         invoice.items.map(item =>
           this.fb.nonNullable.group({
             id: [item.id],
-            description: [item.description],
-            quantity: [item.quantity],
-            unitPrice: [item.unitPrice]
+            description: [
+              item.description,
+              [Validators.required]
+            ],
+            quantity: [
+              item.quantity,
+              [Validators.required, Validators.min(1)]
+            ],
+            unitPrice: [
+              item.unitPrice,
+              [Validators.required, Validators.min(0)]
+            ]
           })
         )
       ),
       { emitEvent: false }
     );
 
-    // Cargar los datos iniciales
+    // CARGAR LOS DATOS INICIALES
     this.form.patchValue({
       number: invoice.number,
       issueDate: invoice.issueDate,
       dueDays: invoice.dueDays,
-      clientId: invoice.client.id,
       paymentMethod: invoice.paymentMethod,
 
       issuer: {
@@ -170,53 +269,42 @@ export class InvoiceForm implements OnInit {
       }
     }, { emitEvent: false });
 
-    // Cambiar los datos al seleccionar otro cliente
-    this.form.controls.clientId.valueChanges.subscribe(clientId => {
-      const selectedClient = this.clients.find(
-        client => client.id === clientId
-      );
+    // APLICAR VALIDACIONES INICIALES
+    this.updateClientValidators(
+      this.clientControls.taxCategory.value
+    );
 
-      if (!selectedClient) return;
-
-      this.form.controls.client.patchValue({
-        name: selectedClient.name,
-        taxId: selectedClient.taxId,
-        address: selectedClient.address,
-        country: selectedClient.country,
-        taxCategory: selectedClient.taxCategory
-      }, { emitEvent: false });
-
-      this.emitInvoice();
+    // ACTUALIZAR VALIDACIONES AL CAMBIAR EL ÁMBITO FISCAL
+    this.clientControls.taxCategory.valueChanges.subscribe(category => {
+      this.updateClientValidators(category);
     });
 
-    // Actualizar la factura cuando cambie cualquier campo
+    // ACTUALIZAR LA FACTURA Y LA VISTA PREVIA
     this.form.valueChanges.subscribe(() => {
       this.emitInvoice();
     });
   }
 
-  // Añadir un nuevo concepto a la factura
+  // AÑADIR CONCEPTO
   addItem(): void {
     const newItem = this.fb.nonNullable.group({
       id: [crypto.randomUUID()],
-      description: [''],
-      quantity: [1],
-      unitPrice: [0]
+      description: ['', [Validators.required]],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      unitPrice: [0, [Validators.required, Validators.min(0)]]
     });
 
     this.items.push(newItem);
   }
 
-  
+  // ELIMINAR CONCEPTO
   removeItem(index: number): void {
-    if (this.items.length <= 1) {
-      return;
-    }
+    if (this.items.length <= 1) return;
 
     this.items.removeAt(index);
   }
 
-
+  // EMITIR FACTURA ACTUALIZADA
   private emitInvoice(): void {
     const values = this.form.getRawValue();
 
@@ -234,7 +322,8 @@ export class InvoiceForm implements OnInit {
       },
 
       client: {
-        id: values.clientId,
+        ...this.invoice().client,
+        id: 'manual-client',
         ...values.client
       },
 

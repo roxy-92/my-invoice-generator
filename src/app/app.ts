@@ -3,6 +3,7 @@ import { Component, computed, signal } from '@angular/core';
 
 import { DEFAULT_INVOICE } from './data/default-data';
 import { InvoiceCalculator } from './services/invoice-calculator';
+import { InvoicePdf } from './services/invoice-pdf';
 import type { Invoice } from './models/invoice';
 
 import { InvoiceForm } from './components/invoice-form/invoice-form';
@@ -18,7 +19,10 @@ import { InvoicePreview } from './components/invoice-preview/invoice-preview';
 export class App {
   invoice = signal<Invoice>(structuredClone(DEFAULT_INVOICE));
 
-  constructor(private calculator: InvoiceCalculator) {}
+  constructor(
+    private calculator: InvoiceCalculator,
+    private invoicePdf: InvoicePdf
+  ) {}
 
   totals = computed(() =>
     this.calculator.calculate(this.invoice())
@@ -37,5 +41,9 @@ export class App {
 
   updateInvoice(updatedInvoice: Invoice): void {
     this.invoice.set(updatedInvoice);
+  }
+
+  async exportPdf(): Promise<void> {
+    await this.invoicePdf.export();
   }
 }
