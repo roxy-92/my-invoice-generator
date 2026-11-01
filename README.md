@@ -4,6 +4,16 @@ A responsive invoice generator built with **Angular 22, TypeScript, and SCSS**, 
 
 The project was inspired by the limitations of managing invoices through spreadsheets. Its purpose is to explore a more intuitive, accessible, and efficient frontend solution while demonstrating modern Angular development practices.
 
+
+## Live Demo
+
+**[Try My Invoice Generator](https://roxy-92.github.io/my-invoice-generator/)**
+
+Explore the responsive interface, create sample invoices, test form validations, and export demonstration PDFs directly in your browser.
+
+> **Note:** This is a portfolio demonstration. Generated invoices are not valid for commercial use.
+
+
 ## Key Features
 
 ### Responsive Design
