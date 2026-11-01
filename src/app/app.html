@@ -46,6 +46,12 @@
         </button>
       </div>
 
+      @if (exportError()) {
+        <p role="alert" class="invoice-generator__validation-error">
+          Revisa los campos obligatorios y los valores incorrectos antes de exportar.
+        </p>
+      }
+
       <app-invoice-preview
         [invoice]="invoice()"
         [totals]="totals()"

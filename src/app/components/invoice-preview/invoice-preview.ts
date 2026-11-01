@@ -1,4 +1,3 @@
-
 import { Component, input } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import type { Invoice } from '../../models/invoice';
@@ -17,12 +16,12 @@ export class InvoicePreview {
   totals = input.required<InvoiceTotals>();
   dueDate = input.required<string>();
   taxNote = input.required<string>();
-  
-get ivaRate(): number {
-  return TAX_RULES[this.invoice().taxCategory].iva * 100;
-}
+
+  get ivaRate(): number {
+    return TAX_RULES[this.invoice().taxTreatment].iva * 100;
+  }
 
   get irpfRate(): number {
-    return TAX_RULES[this.invoice().taxCategory].irpf * 100;
+    return this.invoice().irpfRate;
   }
 }

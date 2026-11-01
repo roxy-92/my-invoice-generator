@@ -10,7 +10,8 @@ import {
 import type {
   Invoice,
   PaymentMethod,
-  TaxCategory
+  ClientType,
+  TaxTreatment
 } from '../../models/invoice';
 
 import { spanishTaxIdValidator } from '../../validators/spanish-tax-id.validator';
@@ -35,17 +36,24 @@ export class InvoiceForm implements OnInit {
     { value: 'bizum', label: 'Bizum' }
   ];
 
-  readonly taxCategories: { value: TaxCategory; label: string }[] = [
-    { value: 'private', label: 'Particular (art. 20)' },
-    { value: 'foreign-company', label: 'Empresa extranjera (art. 69)' },
-    { value: 'spanish-exempt', label: 'Empresa España (art. 20)' },
-    { value: 'spanish-standard', label: 'Empresa España (21 % IVA)' }
+  readonly clientTypes: { value: ClientType; label: string }[] = [
+    { value: 'private', label: 'Particular' },
+    { value: 'company', label: 'Empresa / profesional' }
+  ];
+
+  readonly taxTreatments: { value: TaxTreatment; label: string }[] = [
+    { value: 'standard', label: 'IVA general (21 %)' },
+    { value: 'exempt', label: 'Operación exenta (verificar)' },
+    { value: 'reverse-charge', label: 'Inversión del sujeto pasivo (verificar)' },
+    { value: 'outside-scope', label: 'No sujeta a IVA español (verificar)' }
   ];
 
   form = this.fb.nonNullable.group({
     number: ['', [Validators.required]],
     issueDate: ['', [Validators.required]],
     dueDays: [30, [Validators.required, Validators.min(0)]],
+    taxTreatment: this.fb.nonNullable.control<TaxTreatment>('standard'),
+    irpfRate: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
 
     items: this.fb.array([
       this.fb.nonNullable.group({
@@ -61,9 +69,7 @@ export class InvoiceForm implements OnInit {
       taxId: [''],
       address: [''],
       country: [''],
-      taxCategory: this.fb.nonNullable.control<TaxCategory>(
-        'foreign-company'
-      )
+      type: this.fb.nonNullable.control<ClientType>('company')
     }),
 
     paymentMethod: ['bank-transfer' as PaymentMethod],
@@ -118,56 +124,46 @@ export class InvoiceForm implements OnInit {
   }
 
   get isPrivateClient(): boolean {
-    return this.clientControls.taxCategory.value === 'private';
+    return this.clientControls.type.value === 'private';
   }
 
-  get isSpanishCompany(): boolean {
-    const category = this.clientControls.taxCategory.value;
-
-    return category === 'spanish-exempt' ||
-      category === 'spanish-standard';
-  }
-
-  // VALIDACIONES DINÁMICAS DEL CLIENTE
-  private updateClientValidators(category: TaxCategory): void {
+  private updateClientValidators(type: ClientType): void {
     const { name, taxId, address, country } = this.clientControls;
-
-    if (category === 'private') {
+    const requiredText = [Validators.required, Validators.pattern(/.*\S.*/)];
+    if (type === 'company') {
+      name.setValidators(requiredText);
+      address.setValidators(requiredText);
+      country.setValidators(requiredText);
+      // Identificadores internacionales no siguen necesariamente la regla española.
+      taxId.clearValidators();
+    } else {
       name.clearValidators();
       taxId.clearValidators();
       address.clearValidators();
       country.clearValidators();
-    } else {
-      const requiredText = [
-        Validators.required,
-        Validators.pattern(/.*\S.*/)
-      ];
-
-      name.setValidators(requiredText);
-      address.setValidators(requiredText);
-      country.setValidators(requiredText);
-
-      if (
-        category === 'spanish-exempt' ||
-        category === 'spanish-standard'
-      ) {
-        taxId.setValidators([
-          Validators.required,
-          spanishTaxIdValidator
-        ]);
-      } else {
-        taxId.setValidators(requiredText);
-      }
     }
+    for (const control of [name, taxId, address, country]) {
+      control.updateValueAndValidity({ emitEvent: false });
+    }
+    this.form.controls.client.updateValueAndValidity({ emitEvent: false });
+  }
 
-    name.updateValueAndValidity({ emitEvent: false });
-    taxId.updateValueAndValidity({ emitEvent: false });
-    address.updateValueAndValidity({ emitEvent: false });
-    country.updateValueAndValidity({ emitEvent: false });
+  /** Comprueba todos los campos antes de permitir la impresión. */
+  validateForExport(): boolean {
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
 
-    this.form.controls.client.updateValueAndValidity({
-      emitEvent: false
-    });
+    if (this.form.valid && this.items.length > 0) return true;
+
+    // Los campos inválidos pueden estar dentro de acordeones cerrados.
+    const invalid = document.querySelector<HTMLElement>(
+      '.invoice-form .ng-invalid[formcontrolname]'
+    );
+    if (invalid) {
+      invalid.closest('details')?.setAttribute('open', '');
+      invalid.focus();
+    }
+    return false;
   }
 
   // CARGAR LOGOTIPO
@@ -248,6 +244,8 @@ export class InvoiceForm implements OnInit {
       issueDate: invoice.issueDate,
       dueDays: invoice.dueDays,
       paymentMethod: invoice.paymentMethod,
+      taxTreatment: invoice.taxTreatment,
+      irpfRate: invoice.irpfRate,
 
       issuer: {
         name: invoice.issuer.name,
@@ -265,17 +263,17 @@ export class InvoiceForm implements OnInit {
         taxId: invoice.client.taxId,
         address: invoice.client.address,
         country: invoice.client.country,
-        taxCategory: invoice.client.taxCategory
+        type: invoice.client.type
       }
     }, { emitEvent: false });
 
     // APLICAR VALIDACIONES INICIALES
     this.updateClientValidators(
-      this.clientControls.taxCategory.value
+      this.clientControls.type.value
     );
 
-    // ACTUALIZAR VALIDACIONES AL CAMBIAR EL ÁMBITO FISCAL
-    this.clientControls.taxCategory.valueChanges.subscribe(category => {
+    // ACTUALIZAR VALIDACIONES AL CAMBIAR EL TIPO DE DESTINATARIO
+    this.clientControls.type.valueChanges.subscribe(category => {
       this.updateClientValidators(category);
     });
 
@@ -314,6 +312,8 @@ export class InvoiceForm implements OnInit {
       issueDate: values.issueDate,
       dueDays: values.dueDays,
       paymentMethod: values.paymentMethod,
+      taxTreatment: values.taxTreatment,
+      irpfRate: values.irpfRate,
       items: values.items,
 
       issuer: {
@@ -324,10 +324,9 @@ export class InvoiceForm implements OnInit {
       client: {
         ...this.invoice().client,
         id: 'manual-client',
-        ...values.client
-      },
-
-      taxCategory: values.client.taxCategory
+        ...values.client,
+        ...(values.client.type === 'private' ? { name: '', taxId: '', address: '', country: '' } : {})
+      }
     });
   }
 }

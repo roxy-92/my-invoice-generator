@@ -1,34 +1,11 @@
+import type { TaxTreatment } from '../models/invoice';
 
-import type { TaxCategory } from '../models/invoice';
+export interface TaxRule { iva: number; note: string; }
 
-export interface TaxRule {
-  iva: number;
-  irpf: number;
-  note: string;
-}
-
-export const TAX_RULES: Record<TaxCategory, TaxRule> = {
-  private: {
-    iva: 0,
-    irpf: 0,
-    note: 'Prestación de servicios EXENTA, según artículo 20.1.26º de la Ley del IVA.'
-  },
-
-  'foreign-company': {
-    iva: 0,
-    irpf: 0,
-    note: 'Operación no sujeta al IVA conforme al artículo 69 de la Ley 37/1992 del IVA.'
-  },
-
-  'spanish-exempt': {
-    iva: 0,
-    irpf: 0.15,
-    note: 'Prestación de servicios EXENTA, según artículo 20.1.26º de la Ley del IVA.'
-  },
-
-  'spanish-standard': {
-    iva: 0.21,
-    irpf: 0.15,
-    note: ''
-  }
+// Reglas didácticas simplificadas. No determinan automáticamente la situación tributaria.
+export const TAX_RULES: Record<TaxTreatment, TaxRule> = {
+  standard: { iva: 0.21, note: '' },
+  exempt: { iva: 0, note: 'Operación indicada como exenta de IVA. Verificar el fundamento legal aplicable.' },
+  'reverse-charge': { iva: 0, note: 'Operación indicada con inversión del sujeto pasivo. Verificar requisitos y mención legal aplicable.' },
+  'outside-scope': { iva: 0, note: 'Operación indicada como no sujeta a IVA español. Verificar localización y normativa aplicable.' }
 };

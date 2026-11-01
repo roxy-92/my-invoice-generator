@@ -1,15 +1,6 @@
-
-export type TaxCategory =
-  | 'private'
-  | 'foreign-company'
-  | 'spanish-exempt'
-  | 'spanish-standard';
-
-export type PaymentMethod =
-  | 'bank-transfer'
-  | 'paypal'
-  | 'stripe'
-  | 'bizum';
+export type ClientType = 'private' | 'company';
+export type TaxTreatment = 'standard' | 'exempt' | 'reverse-charge' | 'outside-scope';
+export type PaymentMethod = 'bank-transfer' | 'paypal' | 'stripe' | 'bizum';
 
 export interface Issuer {
   name: string;
@@ -25,11 +16,11 @@ export interface Issuer {
 
 export interface Client {
   id: string;
+  type: ClientType;
   name: string;
   taxId: string;
   address: string;
   country: string;
-  taxCategory: TaxCategory;
 }
 
 export interface InvoiceItem {
@@ -47,5 +38,6 @@ export interface Invoice {
   client: Client;
   items: InvoiceItem[];
   paymentMethod: PaymentMethod;
-  taxCategory: TaxCategory;
+  taxTreatment: TaxTreatment;
+  irpfRate: number; // Porcentaje, por ejemplo 15 = 15 %
 }

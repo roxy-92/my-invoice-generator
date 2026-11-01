@@ -1,73 +1,94 @@
 # My Invoice Generator
 
-A modern, responsive invoice generator built with **Angular, TypeScript, and SCSS**, designed to simplify the creation of Spanish invoices through automatic tax calculations, live previews, and PDF export.
+A responsive invoice generator built with **Angular 22, TypeScript, and SCSS**, designed to simplify the creation of Spanish-style invoices through dynamic forms, automatic tax calculations, real-time previews, and PDF export.
 
-The project aims to replace traditional spreadsheet-based invoicing with a more intuitive and efficient web application.
+The project was inspired by the limitations of managing invoices through spreadsheets. Its purpose is to explore a more intuitive, accessible, and efficient frontend solution while demonstrating modern Angular development practices.
 
-## Features
+## Key Features
 
-### Invoice Creation
-- Add issuer and client information.
-- Enter invoice numbers, issue dates, and payment details.
-- Add, edit, and remove invoice items dynamically.
-- Specify descriptions, quantities, unit prices, and discounts.
-- Preview the invoice in real time.
+### Responsive Design
+- **Fully responsive interface** designed for desktop, tablet, and mobile devices.
+- Adaptive layouts that accommodate different screen sizes.
+- Responsive invoice forms and live preview.
+- Dedicated **A4 print styles** to preserve document formatting when exporting to PDF.
+- Consistent visual hierarchy and usability across devices.
 
-### Spanish Tax Calculations
-- Automatic calculation of taxable amounts.
-- Support for applicable Spanish VAT (IVA) rates.
-- Configurable personal income tax (IRPF) withholding.
-- Automatic calculation of subtotals, taxes, and final amounts.
-- Validation of invoice fields and calculations.
+### Form Validation
+- **Angular Reactive Forms** with strongly typed form controls.
+- Real-time validation of required fields and input formats.
+- Custom validation for Spanish tax identification numbers.
+- Email and Spanish postal code validation.
+- **Conditional validation** based on the selected client type.
+- Dynamic invoice items managed through `FormArray`.
+- Prevention of PDF export when required information is missing or invalid.
+- Automatic expansion of form sections containing validation errors.
 
-Tax rates and treatments depend on the transaction and taxpayer. The application will not assume that the same tax configuration applies to every invoice.
+### Invoice Management
+- Editable issuer and client information.
+- Custom issuer logo upload.
+- Invoice numbering, issue dates, and configurable payment terms.
+- Automatic payment due-date calculation.
+- Dynamic invoice items with descriptions, quantities, and unit prices.
+- Multiple payment methods: bank transfer, PayPal, Stripe, and Bizum.
+- **Real-time invoice preview** synchronized with form changes.
 
-### Export and Data Management
-- Generate professional, print-ready A4 PDF invoices.
-- Export invoice data as JSON.
-- Import previously exported JSON files to continue editing.
-- Use the application without registration or a backend.
+### Tax Calculations
+- Automatic calculation of subtotals and invoice totals.
+- Spanish standard VAT (21%).
+- Configurable IRPF withholding.
+- Independent client type and tax treatment selection.
+- Demonstration options for VAT exemptions, reverse-charge transactions, and operations outside the scope of Spanish VAT.
+- Contextual tax notes based on the selected treatment.
+- Centralized calculation logic separated from UI components.
 
-### User Interface
-- Responsive design for desktop, tablet, and mobile.
-- Dynamic forms with real-time validation.
-- Live invoice preview.
-- Clean and accessible interface.
+### PDF Export
+- Print-ready A4 invoice layout.
+- PDF generation through the browser's native printing functionality.
+- Dedicated print styles that exclude application controls.
+- Validation before export.
 
 ## Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| Angular | Frontend framework |
-| TypeScript | Application logic and type safety |
-| SCSS | Styling and responsive layouts |
-| Angular Reactive Forms | Dynamic forms and validation |
-| Angular Signals | Reactive state and calculations |
-| pdfmake | PDF document generation |
-| GitHub Pages | Static application hosting |
+| **Angular 22** | Standalone components and application architecture |
+| **TypeScript** | Strong typing and business logic |
+| **SCSS** | Responsive layouts, component styling, and print styles |
+| **Angular Reactive Forms** | Dynamic forms, conditional validation, and FormArray |
+| **Angular Signals** | Reactive state management and computed values |
+| **Angular Material** | UI components and interactions |
+| **Vitest** | Unit testing |
+| **Browser Print API** | A4 document printing and PDF export |
 
-## Project Goals
+## Technical Highlights
 
-This project is designed to demonstrate practical frontend development skills, including:
+This project demonstrates several practical frontend development concepts:
 
-- Building reusable Angular components.
-- Managing complex forms with Reactive Forms and FormArray.
-- Implementing business logic and financial calculations.
-- Using Signals for reactive state management.
-- Creating and exporting PDF documents.
-- Handling JSON file import and export.
-- Implementing responsive and accessible interfaces.
-- Writing unit tests for tax calculations, rounding, and form validation.
-- Deploying an Angular application using GitHub Pages.
+- **Component-based architecture:** Separation of invoice editing, preview rendering, and calculation logic.
+- **Reactive state management:** Angular Signals and computed values keep the invoice preview and financial totals synchronized.
+- **Complex form handling:** Nested form groups, dynamically managed items, custom validators, and conditional requirements.
+- **Responsive UI development:** Adaptive layouts and SCSS media queries for different screen sizes.
+- **Data modeling:** TypeScript interfaces for invoices, clients, issuers, and tax treatments.
+- **Business logic separation:** Dedicated services for tax calculations, due dates, and PDF export.
+- **User experience:** Immediate feedback, validation-aware exporting, and a live document preview.
+- **Testing:** Automated unit tests using Vitest.
 
-## Legal Disclaimer
+## Project Scope
 
-This application is intended as a frontend development project and invoice drafting tool.
+My Invoice Generator is a **frontend-only portfolio project** that runs without a backend, database, or user authentication.
 
-Although it aims to support Spanish invoicing fields and tax calculations, it has not been certified or verified as compliant with all applicable Spanish invoicing regulations, including SIF/VERI*FACTU requirements.
+It focuses on invoice creation, responsive interface design, form validation, and financial calculations rather than persistent invoice storage or accounting management.
 
-It should not be relied upon as legally compliant invoicing software without further assessment.
+## Disclaimer
+
+**DOCUMENTO DE DEMOSTRACIÓN · NO VÁLIDO PARA USO COMERCIAL**
+
+This application is an experimental portfolio project intended for educational and demonstration purposes.
+
+Its calculations, tax treatments, and legal notices have not been independently verified for commercial use. The application has not been assessed for compliance with all applicable Spanish invoicing regulations, including SIF/VERI*FACTU.
+
+Generated documents are explicitly marked as demonstrations and must not be used as legally valid invoices.
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License.

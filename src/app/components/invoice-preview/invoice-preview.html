@@ -82,23 +82,22 @@
         <!-- CLIENTE -->
         <div class="client-preview">
           <h3>Datos del cliente</h3>
-
-          <p>
-            <strong>{{ invoice().client.name }}</strong>
-          </p>
-
-          @if (invoice().client.taxId) {
-            <p>
-              NIF / VAT: {{ invoice().client.taxId }}
-            </p>
+          @if (invoice().client.type === 'private') {
+            <p><strong>Destinatario particular</strong></p>
+            <p>Datos identificativos no indicados (demostración).</p>
+          } @else {
+            <p><strong>{{ invoice().client.name }}</strong></p>
+            @if (invoice().client.taxId) {
+              <p>NIF / VAT: {{ invoice().client.taxId }}</p>
+            }
+            @if (invoice().client.address) {
+              <p>{{ invoice().client.address }}</p>
+            }
+            <p>{{ invoice().client.country }}</p>
           }
-
-          @if (invoice().client.address) {
-            <p>{{ invoice().client.address }}</p>
-          }
-
-          <p>{{ invoice().client.country }}</p>
         </div>
+
+
 
       </div>
 

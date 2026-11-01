@@ -1,101 +1,38 @@
-
 <section class="invoice-form">
   <h2>Datos de la factura</h2>
-
   <form [formGroup]="form">
-
-    <!-- DATOS DEL EMISOR -->
     <details class="form-accordion">
       <summary>Datos del emisor</summary>
-
       <fieldset class="issuer-fields" formGroupName="issuer">
-
-        <!-- LOGOTIPO -->
         <div class="logo-upload">
           <label for="issuer-logo">Logotipo</label>
-
           <div class="logo-upload__preview">
             @if (invoice().issuer.logo) {
-              <img
-                [src]="invoice().issuer.logo"
-                alt="Logotipo del emisor"
-              />
+              <img [src]="invoice().issuer.logo" alt="Logotipo del emisor" />
             } @else {
               <span>Sin logotipo</span>
             }
           </div>
-
-          <input
-            id="issuer-logo"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            (change)="onLogoSelected($event)"
-          />
+          <input id="issuer-logo" type="file" accept="image/png,image/jpeg,image/webp" (change)="onLogoSelected($event)" />
         </div>
 
-        <!-- NOMBRE -->
         <div class="form-field">
-          <label for="issuer-name">
-            Nombre o razón social *
-          </label>
-
-          <input
-            id="issuer-name"
-            type="text"
-            formControlName="name"
-            [attr.aria-invalid]="
-              form.controls.issuer.controls.name.invalid &&
-              (
-                form.controls.issuer.controls.name.dirty ||
-                form.controls.issuer.controls.name.touched
-              )
-            "
-          />
-
-          @if (
-            form.controls.issuer.controls.name.invalid &&
-            (
-              form.controls.issuer.controls.name.dirty ||
-              form.controls.issuer.controls.name.touched
-            )
-          ) {
-            <span class="form-field__error">
-              Introduce un nombre o razón social válido.
-            </span>
+          <label for="issuer-name">Nombre o razón social *</label>
+          <input id="issuer-name" type="text" formControlName="name"
+            [attr.aria-invalid]="form.controls.issuer.controls.name.invalid && (form.controls.issuer.controls.name.dirty || form.controls.issuer.controls.name.touched)" />
+          @if (form.controls.issuer.controls.name.invalid && (form.controls.issuer.controls.name.dirty || form.controls.issuer.controls.name.touched)) {
+            <span class="form-field__error">Introduce un nombre o razón social válido.</span>
           }
         </div>
 
-        <!-- NIF / NIE / CIF -->
         <div class="form-field">
-          <label for="issuer-tax-id">
-            NIF / NIE / CIF *
-          </label>
-
-          <input
-            id="issuer-tax-id"
-            type="text"
-            formControlName="taxId"
-            [attr.aria-invalid]="
-              form.controls.issuer.controls.taxId.invalid &&
-              (
-                form.controls.issuer.controls.taxId.dirty ||
-                form.controls.issuer.controls.taxId.touched
-              )
-            "
-          />
-
-          @if (
-            form.controls.issuer.controls.taxId.invalid &&
-            (
-              form.controls.issuer.controls.taxId.dirty ||
-              form.controls.issuer.controls.taxId.touched
-            )
-          ) {
+          <label for="issuer-tax-id">NIF / NIE / CIF *</label>
+          <input id="issuer-tax-id" type="text" formControlName="taxId"
+            [attr.aria-invalid]="form.controls.issuer.controls.taxId.invalid && (form.controls.issuer.controls.taxId.dirty || form.controls.issuer.controls.taxId.touched)" />
+          @if (form.controls.issuer.controls.taxId.invalid && (form.controls.issuer.controls.taxId.dirty || form.controls.issuer.controls.taxId.touched)) {
             <span class="form-field__error">
-              @if (
-                form.controls.issuer.controls.taxId.hasError('required')
-              ) {
-                El NIF, NIE o CIF es obligatorio.
+              @if (form.controls.issuer.controls.taxId.hasError('required')) {
+                El identificador fiscal es obligatorio.
               } @else {
                 Introduce un NIF, NIE o CIF español válido.
               }
@@ -103,188 +40,62 @@
           }
         </div>
 
-        <!-- CORREO ELECTRÓNICO -->
         <div class="form-field">
-          <label for="issuer-email">
-            Correo electrónico *
-          </label>
-
-          <input
-            id="issuer-email"
-            type="email"
-            formControlName="email"
-            aria-describedby="issuer-email-error"
-            [attr.aria-invalid]="
-              form.controls.issuer.controls.email.invalid &&
-              (
-                form.controls.issuer.controls.email.dirty ||
-                form.controls.issuer.controls.email.touched
-              )
-            "
-          />
-
-          @if (
-            form.controls.issuer.controls.email.invalid &&
-            (
-              form.controls.issuer.controls.email.dirty ||
-              form.controls.issuer.controls.email.touched
-            )
-          ) {
-            <span
-              id="issuer-email-error"
-              class="form-field__error"
-            >
-              @if (
-                form.controls.issuer.controls.email.hasError('required')
-              ) {
+          <label for="issuer-email">Correo electrónico *</label>
+          <input id="issuer-email" type="email" formControlName="email"
+            [attr.aria-invalid]="form.controls.issuer.controls.email.invalid && (form.controls.issuer.controls.email.dirty || form.controls.issuer.controls.email.touched)" />
+          @if (form.controls.issuer.controls.email.invalid && (form.controls.issuer.controls.email.dirty || form.controls.issuer.controls.email.touched)) {
+            <span class="form-field__error">
+              @if (form.controls.issuer.controls.email.hasError('required')) {
                 El correo electrónico es obligatorio.
-              } @else if (
-                form.controls.issuer.controls.email.hasError('email') ||
-                form.controls.issuer.controls.email.hasError('pattern')
-              ) {
+              } @else {
                 Introduce un correo electrónico válido.
               }
             </span>
           }
         </div>
 
-        <!-- DIRECCIÓN -->
         <div class="form-field">
-          <label for="issuer-address">
-            Dirección
-          </label>
-
-          <input
-            id="issuer-address"
-            type="text"
-            formControlName="address"
-          />
+          <label for="issuer-address">Dirección *</label>
+          <input id="issuer-address" type="text" formControlName="address" />
         </div>
-
-        <!-- CÓDIGO POSTAL -->
         <div class="form-field">
-          <label for="issuer-postal-code">
-            Código postal *
-          </label>
-
-          <input
-            id="issuer-postal-code"
-            type="text"
-            formControlName="postalCode"
-            inputmode="numeric"
-            maxlength="5"
-            [attr.aria-invalid]="
-              form.controls.issuer.controls.postalCode.invalid &&
-              (
-                form.controls.issuer.controls.postalCode.dirty ||
-                form.controls.issuer.controls.postalCode.touched
-              )
-            "
-          />
-
-          @if (
-            form.controls.issuer.controls.postalCode.invalid &&
-            (
-              form.controls.issuer.controls.postalCode.dirty ||
-              form.controls.issuer.controls.postalCode.touched
-            )
-          ) {
-            <span class="form-field__error">
-              @if (
-                form.controls.issuer.controls.postalCode.hasError('required')
-              ) {
-                El código postal es obligatorio.
-              } @else {
-                Introduce un código postal español válido de 5 dígitos.
-              }
-            </span>
+          <label for="issuer-postal-code">Código postal *</label>
+          <input id="issuer-postal-code" type="text" inputmode="numeric" maxlength="5" formControlName="postalCode"
+            [attr.aria-invalid]="form.controls.issuer.controls.postalCode.invalid && (form.controls.issuer.controls.postalCode.dirty || form.controls.issuer.controls.postalCode.touched)" />
+          @if (form.controls.issuer.controls.postalCode.invalid && (form.controls.issuer.controls.postalCode.dirty || form.controls.issuer.controls.postalCode.touched)) {
+            <span class="form-field__error">Introduce un código postal español válido de 5 dígitos.</span>
           }
         </div>
-
-        <!-- LOCALIDAD -->
         <div class="form-field">
-          <label for="issuer-city">
-            Localidad
-          </label>
-
-          <input
-            id="issuer-city"
-            type="text"
-            formControlName="city"
-          />
+          <label for="issuer-city">Localidad</label>
+          <input id="issuer-city" type="text" formControlName="city" />
         </div>
-
-        <!-- PROVINCIA -->
         <div class="form-field">
-          <label for="issuer-province">
-            Provincia
-          </label>
-
-          <input
-            id="issuer-province"
-            type="text"
-            formControlName="province"
-          />
+          <label for="issuer-province">Provincia</label>
+          <input id="issuer-province" type="text" formControlName="province" />
         </div>
-
-        <!-- PAÍS -->
         <div class="form-field">
-          <label for="issuer-country">
-            País
-          </label>
-
-          <input
-            id="issuer-country"
-            type="text"
-            formControlName="country"
-          />
+          <label for="issuer-country">País *</label>
+          <input id="issuer-country" type="text" formControlName="country" />
         </div>
-
       </fieldset>
     </details>
 
-    <!-- INFORMACIÓN DE LA FACTURA -->
     <details class="form-accordion">
       <summary>Información de la factura</summary>
-
       <div class="form-accordion__content">
-
-        <!-- NÚMERO -->
         <div class="form-field">
-          <label for="invoice-number">
-            Número de factura
-          </label>
-
-          <input
-            id="invoice-number"
-            type="text"
-            formControlName="number"
-          />
+          <label for="invoice-number">Número de factura *</label>
+          <input id="invoice-number" type="text" formControlName="number" />
         </div>
-
-        <!-- FECHA -->
         <div class="form-field">
-          <label for="issue-date">
-            Fecha de emisión
-          </label>
-
-          <input
-            id="issue-date"
-            type="date"
-            formControlName="issueDate"
-          />
+          <label for="issue-date">Fecha de emisión *</label>
+          <input id="issue-date" type="date" formControlName="issueDate" />
         </div>
-
-        <!-- VENCIMIENTO -->
         <div class="form-field">
-          <label for="due-days">
-            Plazo de vencimiento
-          </label>
-
-          <select
-            id="due-days"
-            formControlName="dueDays"
-          >
+          <label for="due-days">Plazo de vencimiento</label>
+          <select id="due-days" formControlName="dueDays">
             <option [ngValue]="0">El mismo día</option>
             <option [ngValue]="7">7 días</option>
             <option [ngValue]="15">15 días</option>
@@ -293,321 +104,112 @@
             <option [ngValue]="90">90 días</option>
           </select>
         </div>
-
       </div>
     </details>
 
-    <!-- DATOS DEL CLIENTE -->
     <details class="form-accordion">
-      <summary>Datos del cliente</summary>
-
+      <summary>Datos del cliente y fiscalidad</summary>
       <div class="form-accordion__content">
-
-        <!-- ÁMBITO FISCAL -->
-        <div
-          class="form-field"
-          formGroupName="client"
-        >
-          <label for="client-tax-category">
-            Ámbito fiscal
-          </label>
-
-          <select
-            id="client-tax-category"
-            formControlName="taxCategory"
-          >
-            @for (
-              category of taxCategories;
-              track category.value
-            ) {
-              <option [value]="category.value">
-                {{ category.label }}
-              </option>
+        <div class="form-field" formGroupName="client">
+          <label for="client-type">Tipo de destinatario</label>
+          <select id="client-type" formControlName="type">
+            @for (type of clientTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
             }
           </select>
         </div>
 
-        <!-- DATOS PARA EMPRESAS -->
         @if (!isPrivateClient) {
-
-          <fieldset
-            class="client-fields"
-            formGroupName="client"
-          >
+          <fieldset class="client-fields" formGroupName="client">
             <legend>Información del cliente</legend>
-
-            <!-- NOMBRE -->
             <div class="form-field">
-              <label for="client-name">
-                Nombre o razón social *
-              </label>
-
-              <input
-                id="client-name"
-                type="text"
-                formControlName="name"
-                [attr.aria-invalid]="
-                  clientControls.name.invalid &&
-                  (
-                    clientControls.name.dirty ||
-                    clientControls.name.touched
-                  )
-                "
-              />
-
-              @if (
-                clientControls.name.invalid &&
-                (
-                  clientControls.name.dirty ||
-                  clientControls.name.touched
-                )
-              ) {
-                <span class="form-field__error">
-                  Introduce un nombre o razón social válido.
-                </span>
+              <label for="client-name">Nombre o razón social *</label>
+              <input id="client-name" type="text" formControlName="name"
+                [attr.aria-invalid]="clientControls.name.invalid && (clientControls.name.dirty || clientControls.name.touched)" />
+              @if (clientControls.name.invalid && (clientControls.name.dirty || clientControls.name.touched)) {
+                <span class="form-field__error">Introduce un nombre o razón social válido.</span>
               }
             </div>
-
-            <!-- IDENTIFICADOR FISCAL -->
             <div class="form-field">
-              <label for="client-tax-id">
-                @if (isSpanishCompany) {
-                  NIF / CIF *
-                } @else {
-                  Identificador fiscal / VAT *
-                }
-              </label>
-
-              <input
-                id="client-tax-id"
-                type="text"
-                formControlName="taxId"
-                [attr.aria-invalid]="
-                  clientControls.taxId.invalid &&
-                  (
-                    clientControls.taxId.dirty ||
-                    clientControls.taxId.touched
-                  )
-                "
-              />
-
-              @if (
-                clientControls.taxId.invalid &&
-                (
-                  clientControls.taxId.dirty ||
-                  clientControls.taxId.touched
-                )
-              ) {
-                <span class="form-field__error">
-                  @if (
-                    clientControls.taxId.hasError('required')
-                  ) {
-                    El identificador fiscal es obligatorio.
-                  } @else if (isSpanishCompany) {
-                    Introduce un NIF, NIE o CIF español válido.
-                  } @else {
-                    Introduce un identificador fiscal válido.
-                  }
-                </span>
+              <label for="client-tax-id">Identificador fiscal / VAT (si procede)</label>
+              <input id="client-tax-id" type="text" formControlName="taxId" />
+            </div>
+            <div class="form-field">
+              <label for="client-address">Dirección *</label>
+              <input id="client-address" type="text" formControlName="address"
+                [attr.aria-invalid]="clientControls.address.invalid && (clientControls.address.dirty || clientControls.address.touched)" />
+              @if (clientControls.address.invalid && (clientControls.address.dirty || clientControls.address.touched)) {
+                <span class="form-field__error">Introduce una dirección válida.</span>
               }
             </div>
-
-            <!-- DIRECCIÓN -->
             <div class="form-field">
-              <label for="client-address">
-                Dirección *
-              </label>
-
-              <input
-                id="client-address"
-                type="text"
-                formControlName="address"
-                [attr.aria-invalid]="
-                  clientControls.address.invalid &&
-                  (
-                    clientControls.address.dirty ||
-                    clientControls.address.touched
-                  )
-                "
-              />
-
-              @if (
-                clientControls.address.invalid &&
-                (
-                  clientControls.address.dirty ||
-                  clientControls.address.touched
-                )
-              ) {
-                <span class="form-field__error">
-                  Introduce una dirección válida.
-                </span>
+              <label for="client-country">País *</label>
+              <input id="client-country" type="text" formControlName="country"
+                [attr.aria-invalid]="clientControls.country.invalid && (clientControls.country.dirty || clientControls.country.touched)" />
+              @if (clientControls.country.invalid && (clientControls.country.dirty || clientControls.country.touched)) {
+                <span class="form-field__error">Introduce un país válido.</span>
               }
             </div>
-
-            <!-- PAÍS -->
-            <div class="form-field">
-              <label for="client-country">
-                País *
-              </label>
-
-              <input
-                id="client-country"
-                type="text"
-                formControlName="country"
-                [attr.aria-invalid]="
-                  clientControls.country.invalid &&
-                  (
-                    clientControls.country.dirty ||
-                    clientControls.country.touched
-                  )
-                "
-              />
-
-              @if (
-                clientControls.country.invalid &&
-                (
-                  clientControls.country.dirty ||
-                  clientControls.country.touched
-                )
-              ) {
-                <span class="form-field__error">
-                  Introduce un país válido.
-                </span>
-              }
-            </div>
-
           </fieldset>
-
         } @else {
-
-          <!-- CLIENTE PARTICULAR -->
           <div class="private-client-info">
-            <p>
-              No se requieren datos empresariales para esta categoría.
-              Si necesitas emitir una factura completa a una persona
-              física, deberás identificar al destinatario según
-              corresponda.
-            </p>
+            <p>Destinatario particular sin identificar (solo demostración). Una factura completa puede requerir datos identificativos del destinatario.</p>
           </div>
-
         }
 
-      </div>
-    </details>
-
-    <!-- CONCEPTOS Y PAGO -->
-    <details class="form-accordion" open>
-      <summary>Conceptos y pago</summary>
-
-      <div class="form-accordion__content">
-
-        <!-- FORMA DE PAGO -->
         <div class="form-field">
-          <label for="payment-method">
-            Forma de pago
-          </label>
-
-          <select
-            id="payment-method"
-            formControlName="paymentMethod"
-          >
-            @for (
-              method of paymentMethods;
-              track method.value
-            ) {
-              <option [value]="method.value">
-                {{ method.label }}
-              </option>
+          <label for="tax-treatment">Tratamiento del IVA</label>
+          <select id="tax-treatment" formControlName="taxTreatment">
+            @for (treatment of taxTreatments; track treatment.value) {
+              <option [value]="treatment.value">{{ treatment.label }}</option>
             }
           </select>
         </div>
-
-        <!-- CONCEPTOS -->
-        <fieldset class="items-fields">
-          <legend>Conceptos de la factura</legend>
-
-          <div formArrayName="items">
-
-            @for (
-              item of items.controls;
-              track item;
-              let i = $index
-            ) {
-              <div
-                [formGroupName]="i"
-                class="invoice-item-fields"
-              >
-
-                <!-- DESCRIPCIÓN -->
-                <div class="form-field">
-                  <label [for]="'item-description-' + i">
-                    Descripción
-                  </label>
-
-                  <input
-                    [id]="'item-description-' + i"
-                    type="text"
-                    formControlName="description"
-                  />
-                </div>
-
-                <!-- CANTIDAD -->
-                <div class="form-field">
-                  <label [for]="'item-quantity-' + i">
-                    Cantidad
-                  </label>
-
-                  <input
-                    [id]="'item-quantity-' + i"
-                    type="number"
-                    min="1"
-                    formControlName="quantity"
-                  />
-                </div>
-
-                <!-- PRECIO -->
-                <div class="form-field">
-                  <label [for]="'item-price-' + i">
-                    Precio unitario (€)
-                  </label>
-
-                  <input
-                    [id]="'item-price-' + i"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    formControlName="unitPrice"
-                  />
-                </div>
-
-                <!-- ELIMINAR CONCEPTO -->
-                <button
-                  type="button"
-                  class="remove-item-button"
-                  [disabled]="items.length <= 1"
-                  (click)="removeItem(i)"
-                >
-                  Eliminar concepto
-                </button>
-
-              </div>
-            }
-
-          </div>
-
-          <!-- AÑADIR CONCEPTO -->
-          <button
-            type="button"
-            class="add-item-button"
-            (click)="addItem()"
-          >
-            + Añadir concepto
-          </button>
-
-        </fieldset>
-
+        <div class="form-field">
+          <label for="irpf-rate">Retención IRPF (%)</label>
+          <input id="irpf-rate" type="number" min="0" max="100" step="0.01" formControlName="irpfRate" />
+        </div>
+        <div class="private-client-info">
+          <p>Selecciona el IVA y el IRPF según la operación. Esta demo no verifica si procede una exención, inversión del sujeto pasivo o retención.</p>
+        </div>
       </div>
     </details>
 
+    <details class="form-accordion" open>
+      <summary>Conceptos y pago</summary>
+      <div class="form-accordion__content">
+        <div class="form-field">
+          <label for="payment-method">Forma de pago</label>
+          <select id="payment-method" formControlName="paymentMethod">
+            @for (method of paymentMethods; track method.value) {
+              <option [value]="method.value">{{ method.label }}</option>
+            }
+          </select>
+        </div>
+        <fieldset class="items-fields">
+          <legend>Conceptos de la factura</legend>
+          <div formArrayName="items">
+            @for (item of items.controls; track item; let i = $index) {
+              <div [formGroupName]="i" class="invoice-item-fields">
+                <div class="form-field">
+                  <label [for]="'item-description-' + i">Descripción</label>
+                  <input [id]="'item-description-' + i" type="text" formControlName="description" />
+                </div>
+                <div class="form-field">
+                  <label [for]="'item-quantity-' + i">Cantidad</label>
+                  <input [id]="'item-quantity-' + i" type="number" min="1" formControlName="quantity" />
+                </div>
+                <div class="form-field">
+                  <label [for]="'item-price-' + i">Precio unitario (€)</label>
+                  <input [id]="'item-price-' + i" type="number" min="0" step="0.01" formControlName="unitPrice" />
+                </div>
+                <button type="button" class="remove-item-button" [disabled]="items.length <= 1" (click)="removeItem(i)">Eliminar concepto</button>
+              </div>
+            }
+          </div>
+          <button type="button" class="add-item-button" (click)="addItem()">+ Añadir concepto</button>
+        </fieldset>
+      </div>
+    </details>
   </form>
 </section>

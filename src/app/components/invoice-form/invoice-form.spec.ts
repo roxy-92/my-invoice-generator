@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InvoiceForm } from './invoice-form';
+import { DEFAULT_INVOICE } from '../../data/default-data';
 
 describe('InvoiceForm', () => {
   let component: InvoiceForm;
@@ -12,7 +13,13 @@ describe('InvoiceForm', () => {
 
     fixture = TestBed.createComponent(InvoiceForm);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+
+    fixture.componentRef.setInput(
+      'invoice',
+      structuredClone(DEFAULT_INVOICE)
+    );
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {

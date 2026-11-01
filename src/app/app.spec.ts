@@ -1,5 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeEs, 'es-ES');
 
 describe('App', () => {
   beforeEach(async () => {
@@ -19,6 +23,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, my-invoice-generator');
-  });
+    expect(compiled.querySelector('h1')?.textContent)
+    .toContain('Generador de facturas');
+    });
 });
